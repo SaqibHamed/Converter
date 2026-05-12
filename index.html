@@ -419,7 +419,10 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px;
   background: var(--input-bg); font-family: 'Roboto Mono', monospace; font-size: 11px;
   color: var(--accent); text-align: left; padding: 0 4px; outline: none;
   transition: border-color .1s;
+  -moz-appearance: textfield;
 }
+.slider-number::-webkit-inner-spin-button,
+.slider-number::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .slider-number:focus { border-color: var(--accent); }
 
 /* TRIM DUAL RANGE */
@@ -616,7 +619,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px;
           <div class="fl">
             <span>Loop</span>
             <label class="toggle-row" id="gLoopToggleRow" style="margin:0">
-              <span class="toggle-label" id="gLoopToggleLabel" style="font-size:11px;color:#1a73e8;font-family:Roboto Mono,monospace">∞</span>
+              <span class="toggle-label" id="gLoopToggleLabel" style="font-size:11px;color:#1a73e8;font-family:Roboto Mono,monospace">Infinite</span>
               <div class="toggle-switch on" id="gLoopToggle"><div class="toggle-knob"></div></div>
             </label>
           </div>
@@ -650,7 +653,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px;
           <div class="fl">
             <span>Loop</span>
             <label class="toggle-row" id="vLoopToggleRow" style="margin:0">
-              <span class="toggle-label" id="vLoopToggleLabel" style="font-size:11px;color:#1a73e8;font-family:Roboto Mono,monospace">∞</span>
+              <span class="toggle-label" id="vLoopToggleLabel" style="font-size:11px;color:#1a73e8;font-family:Roboto Mono,monospace">Infinite</span>
               <div class="toggle-switch on" id="vLoopToggle"><div class="toggle-knob"></div></div>
             </label>
           </div>
@@ -682,47 +685,29 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px;
             <span>0s</span><span id="trimDurLabel">?s</span>
           </div>
         </div>
-        <div class="field">
-          <div class="fl"><span>Speed</span><input class="slider-number" id="vSpeedVal" value="1.0" min="0.1" max="8" type="number" step="0.1" style="width:52px"></div>
-          <input type="range" min="-20" max="20" value="0" id="vSpeedSlider" step="1">
-          <div style="font-size:10px;color:var(--text3);margin-top:2px" id="vSpeedHint">1× — normal speed</div>
-        </div>
-        <div class="field">
-          <div class="fl" style="font-weight:500">Speed</div>
-          <div style="display:flex;gap:5px;margin-top:4px">
-            <label class="toggle-row" style="gap:5px;margin:0">
-              <span style="font-size:10px;color:var(--text3)">×</span>
-              <div class="toggle-switch on" id="vSpeedModeToggle" title="Toggle: multiplier or target duration"><div class="toggle-knob"></div></div>
-              <span style="font-size:10px;color:var(--text3)">s</span>
-            </label>
-          </div>
-          <!-- Multiplier mode -->
-          <div id="vSpeedMultField" style="margin-top:4px">
-            <div class="fl"><span style="font-size:11px;color:var(--text2)">Multiplier</span><input class="slider-number" id="vSpeedVal" value="1.00" min="0.1" max="16" type="number" step="0.05" style="width:58px"></div>
-            <input type="range" min="-30" max="30" value="0" id="vSpeedSlider" step="1">
-            <div style="font-size:10px;color:var(--text3);margin-top:2px" id="vSpeedHint">1.00× — normal speed</div>
-          </div>
-          <!-- Target duration mode -->
-          <div id="vSpeedDurField" style="display:none;margin-top:4px">
-            <div class="fl"><span style="font-size:11px;color:var(--text2)">Target duration (s)</span></div>
-            <input type="number" class="slider-number" id="vSpeedDur" value="" min="0.1" step="0.1" placeholder="e.g. 3.0" style="width:100%">
-            <div style="font-size:10px;color:var(--text3);margin-top:2px" id="vSpeedDurHint">calculated from trim range</div>
-          </div>
-        </div>
         <!-- Speed -->
         <div class="field">
-          <div class="fl" style="font-weight:500;font-size:11px;color:var(--text2)">Speed / Duration</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
-            <div>
-              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Speed ×</div>
-              <input type="number" class="slider-number" id="vSpeedVal" value="1.0" min="0.1" max="16" step="0.1" style="width:100%">
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Target (s)</div>
-              <input type="number" class="slider-number" id="vDurVal" value="" min="0.1" step="0.1" placeholder="auto" style="width:100%">
-            </div>
+          <div class="fl" style="font-weight:500;font-size:11px;color:var(--text2)">Playback speed</div>
+          <div style="display:flex;gap:4px;margin-top:4px">
+            <button id="vSpeedModeBtn1" class="ch-opt active" style="height:26px;font-size:11px;flex:1">Multiplier</button>
+            <button id="vSpeedModeBtn2" class="ch-opt" style="height:26px;font-size:11px;flex:1">Duration</button>
           </div>
-          <div style="font-size:10px;color:var(--text4);margin-top:3px" id="vSpeedHint">1× = normal speed</div>
+          <!-- Mode 1: dropdown multiplier -->
+          <div id="vSpeedMode1" style="margin-top:6px">
+            <select id="vSpeedSel">
+              <option value="0.25">0.25× — 4× faster</option>
+              <option value="0.5">0.5× — 2× faster</option>
+              <option value="1" selected>1× — normal</option>
+              <option value="2">2× — 2× slower</option>
+              <option value="4">4× — 4× slower</option>
+            </select>
+          </div>
+          <!-- Mode 2: target duration -->
+          <div id="vSpeedMode2" style="display:none;margin-top:6px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:3px">Target duration (s)</div>
+            <input type="number" class="slider-number" id="vDurVal" value="" min="0.1" step="0.1" placeholder="e.g. 1.0" style="width:100%">
+            <div style="font-size:10px;color:var(--text4);margin-top:3px" id="vSpeedHint">Enter target length → multiplier auto-calculated</div>
+          </div>
         </div>
         <!-- Saturation/Color -->
         <div class="field">
@@ -1910,7 +1895,7 @@ function saveActiveSettings(){
     gifEnd:$('gEndVal').value===''?null:parseFloat($('gEndVal').value),
     videoFps:parseInt($('vfSlider')?.value)||10,
     videoSat:parseInt($('vSatSlider')?.value)||100,
-    videoSpeed:parseFloat($('vSpeedVal')?.value)||1.0,
+    videoSpeed:(typeof getVideoSpeedMultiplier==='function')?getVideoSpeedMultiplier():1.0,
     videoLoop:$('vLoopToggle')?.classList.contains('on')?0:parseInt($('vLoopSlider')?.value)||1,
     splitRGB:$('splitToggle').classList.contains('on'),
     nmFlip:$('nmToggle').classList.contains('on'),
@@ -1942,18 +1927,18 @@ function loadSettingsToUI(s){
   const isInf=(s.gifLoop||0)===0;
   $('gLoopToggle').classList.toggle('on',isInf);
   const gll=$('gLoopToggleLabel');
-  if(gll){ gll.textContent=isInf?'∞':'count'; gll.style.color=isInf?'#1a73e8':'#999'; }
+  if(gll){ gll.textContent=isInf?'Infinite':'count'; gll.style.color=isInf?'#1a73e8':'#999'; }
   const gcf=$('gLoopCountField'); if(gcf) gcf.style.display=isInf?'none':'block';
   $('gLoopSlider').value=s.gifLoop||1; const gv=$('gLoopVal'); if(gv) gv.textContent=s.gifLoop||1;
   $('gDelaySlider').value=s.gifDelay||100; $('gDelayVal').value=s.gifDelay||100;
   $('gDitherSel').value=(s.gifDither==='ordered'?'stucki':s.gifDither)||'floyd';
   if($('vfSlider')){ $('vfSlider').value=s.videoFps||10; $('vfVal').value=s.videoFps||10; }
   if($('vSatSlider')){ $('vSatSlider').value=s.videoSat||100; $('vSatVal').value=s.videoSat||100; }
-  if($('vSpeedVal')){ const spd=s.videoSpeed||1.0; $('vSpeedVal').value=spd; updateSpeedHint(spd); }
+  if($('vSpeedSel')){ const spd=s.videoSpeed||1.0; const opts=[0.25,0.5,1,2,4]; $('vSpeedSel').value=opts.reduce((a,b)=>Math.abs(b-spd)<Math.abs(a-spd)?b:a); }
   if($('vColorsSel')){ const gcOpts=[2,4,8,16,32,64,128,256]; const gcV=s.gifColors||128; $('vColorsSel').value=gcOpts.reduce((a,b)=>Math.abs(b-gcV)<Math.abs(a-gcV)?b:a); }
   if($('vDitherSel')) $('vDitherSel').value=s.gifDither||'floyd';
   const vIsInf=(s.videoLoop||0)===0;
-  if($('vLoopToggle')){ $('vLoopToggle').classList.toggle('on',vIsInf); const vl=$('vLoopToggleLabel'); if(vl){ vl.textContent=vIsInf?'∞':'count'; vl.style.color=vIsInf?'#1a73e8':'#999'; } }
+  if($('vLoopToggle')){ $('vLoopToggle').classList.toggle('on',vIsInf); const vl=$('vLoopToggleLabel'); if(vl){ vl.textContent=vIsInf?'Infinite':'count'; vl.style.color=vIsInf?'#1a73e8':'#999'; } }
   if($('vLoopCountField')) $('vLoopCountField').style.display=vIsInf?'none':'block';
   $('gStartVal').value=s.gifStart||0;
   $('gEndVal').value=s.gifEnd!=null?s.gifEnd:'';
@@ -2121,7 +2106,7 @@ $('vLoopToggle')?.parentElement?.addEventListener('click',()=>{
   const isInf=!tog.classList.contains('on');
   tog.classList.toggle('on',!isInf);
   const lbl=$('vLoopToggleLabel');
-  if(lbl){ lbl.textContent=!isInf?'∞':'count'; lbl.style.color=!isInf?'#1a73e8':'#999'; }
+  if(lbl){ lbl.textContent=!isInf?'Infinite':'count'; lbl.style.color=!isInf?'#1a73e8':'#999'; }
   const cf=$('vLoopCountField');
   if(cf) cf.style.display=!isInf?'none':'block';
   onSettingChange();
@@ -2129,37 +2114,42 @@ $('vLoopToggle')?.parentElement?.addEventListener('click',()=>{
 $('vLoopSlider')?.addEventListener('input',()=>onSettingChange());
 $('vColorsSel')?.addEventListener('change',()=>onSettingChange());
 
-// Speed / Duration bidirectional sync
-function updateSpeedHint(spd){
-  const hint=$('vSpeedHint');
-  if(!hint) return;
-  if(Math.abs(spd-1)<0.01){ hint.textContent='1× = normal speed'; }
-  else if(spd>1){ hint.textContent=spd.toFixed(2)+'× = '+spd.toFixed(2)+'× faster'; }
-  else { hint.textContent=spd.toFixed(2)+'× = '+(1/spd).toFixed(2)+'× slower'; }
+// Speed mode toggle
+let vSpeedMode = 1;
+function setVSpeedMode(m){
+  vSpeedMode = m;
+  $('vSpeedModeBtn1').classList.toggle('active', m===1);
+  $('vSpeedModeBtn2').classList.toggle('active', m===2);
+  $('vSpeedMode1').style.display = m===1 ? '' : 'none';
+  $('vSpeedMode2').style.display = m===2 ? '' : 'none';
 }
-$('vSpeedVal')?.addEventListener('input', ()=>{
-  const spd = Math.max(0.01, parseFloat($('vSpeedVal').value)||1);
-  $('vSpeedVal').value = spd;
-  // Compute target duration from speed + trim
-  const start = parseFloat($('gStartVal')?.value)||0;
-  const end = $('gEndVal')?.value ? parseFloat($('gEndVal').value) : trimDuration;
-  const clipLen = Math.max(0.1, end - start);
-  const targetDur = clipLen / spd;
-  const dv=$('vDurVal'); if(dv) dv.value = targetDur.toFixed(2);
-  updateSpeedHint(spd);
-  onSettingChange();
-});
+$('vSpeedModeBtn1').addEventListener('click', ()=>setVSpeedMode(1));
+$('vSpeedModeBtn2').addEventListener('click', ()=>setVSpeedMode(2));
+
+$('vSpeedSel')?.addEventListener('change', ()=>onSettingChange());
+
 $('vDurVal')?.addEventListener('input', ()=>{
-  const targetDur = Math.max(0.01, parseFloat($('vDurVal').value)||0);
-  if(!targetDur){ onSettingChange(); return; }
-  const start = parseFloat($('gStartVal')?.value)||0;
-  const end = $('gEndVal')?.value ? parseFloat($('gEndVal').value) : trimDuration;
-  const clipLen = Math.max(0.1, end - start);
-  const spd = clipLen / targetDur;
-  const sv=$('vSpeedVal'); if(sv) sv.value = Math.max(0.01, spd).toFixed(2);
-  updateSpeedHint(spd);
+  const targetDur = parseFloat($('vDurVal').value)||0;
+  if(targetDur > 0){
+    const start = parseFloat($('gStartVal')?.value)||0;
+    const end = $('gEndVal')?.value ? parseFloat($('gEndVal').value) : (trimDuration||0);
+    const clipLen = Math.max(0.01, end - start) || trimDuration || 1;
+    const spd = clipLen / targetDur;
+    const hint=$('vSpeedHint');
+    if(hint) hint.textContent = `= ${spd.toFixed(2)}× speed multiplier`;
+  }
   onSettingChange();
 });
+
+function getVideoSpeedMultiplier(){
+  if(vSpeedMode===1) return parseFloat($('vSpeedSel')?.value)||1;
+  const targetDur = parseFloat($('vDurVal')?.value)||0;
+  if(!targetDur) return 1;
+  const start = parseFloat($('gStartVal')?.value)||0;
+  const end = $('gEndVal')?.value ? parseFloat($('gEndVal').value) : (trimDuration||0);
+  const clipLen = Math.max(0.01, (end-start)||trimDuration||1);
+  return clipLen / targetDur;
+}
 $('vDitherSel')?.addEventListener('change',()=>onSettingChange());
 if($('vSatSlider')) syncSlider('vSatSlider','vSatVal',0,200);
 // Apply CSS filter to video preview on sat change
@@ -2171,7 +2161,7 @@ $('gLoopToggle').parentElement.addEventListener('click',()=>{
   const isInf=!tog.classList.contains('on');
   tog.classList.toggle('on',!isInf);
   const lbl=$('gLoopToggleLabel');
-  if(lbl){ lbl.textContent=!isInf?'∞':'count'; lbl.style.color=!isInf?'#1a73e8':'#999'; }
+  if(lbl){ lbl.textContent=!isInf?'Infinite':'count'; lbl.style.color=!isInf?'#1a73e8':'#999'; }
   const cf=$('gLoopCountField');
   if(cf) cf.style.display=!isInf?'none':'block';
   onSettingChange();
@@ -3137,7 +3127,7 @@ async function convertToGif(file, s){
       const {w, h} = calcDims(video.videoWidth || 320, video.videoHeight || 240);
       setupGif(w, h);
 
-      const speedMult = s.videoSpeed || 1.0;
+      const speedMult = (typeof getVideoSpeedMultiplier==='function') ? getVideoSpeedMultiplier() : (s.videoSpeed||1.0);
       const speedDelay = Math.max(10, Math.round(delay / speedMult));
       setStatus(`Extracting ${totalFrames} frames (${startSec.toFixed(1)}s → ${endSec.toFixed(1)}s, ${speedMult}×)…`, true);
       for(let i = 0; i < totalFrames; i++){
@@ -3671,5 +3661,5 @@ renderCol1();updateRipBtn();applyLang();updateEmptyOverlays();applyDarkToggleIco
 setTimeout(setRipAnchor,150);
 })();
 </script>
-<div style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#bbb;font-family:'Roboto Mono',monospace;pointer-events:none;z-index:50;letter-spacing:.3px">v0.63</div>
+<div style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#bbb;font-family:'Roboto Mono',monospace;pointer-events:none;z-index:50;letter-spacing:.3px">v0.67</div>
 </html>
