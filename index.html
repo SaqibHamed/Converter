@@ -107,6 +107,40 @@ html, body { height: 100%; font-family: 'Roboto', sans-serif; background: var(--
 /* WORKSPACE */
 .workspace { display: grid; grid-template-columns: 1fr 1fr 1fr; height: calc(100vh - 44px - 26px); }
 
+@media (max-width: 768px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    height: auto;
+    min-height: calc(100vh - 44px - 26px);
+    overflow-y: auto;
+  }
+  .col-1, .col-2 { border-right: none; border-bottom: 1px solid var(--border); }
+  .col { min-height: 280px; max-height: none; height: auto; }
+  .col-body { max-height: 50vh; }
+  .settings-body { max-height: none; }
+  #ripBtn { display: none !important; }
+  /* Mobile convert button — fixed bottom bar */
+  #mobileConvertBar {
+    display: flex !important;
+    position: fixed; bottom: 26px; left: 0; right: 0; z-index: 200;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+  #mobileConvertBtn {
+    flex: 1; height: 44px; background: var(--accent); color: #fff;
+    border: none; border-radius: 6px; font-size: 15px; font-weight: 500;
+    font-family: 'Roboto', sans-serif; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity .15s;
+  }
+  #mobileConvertBtn:active { opacity: .8; }
+  body { padding-bottom: 80px; }
+  .topbar { flex-wrap: nowrap; overflow-x: auto; gap: 4px; }
+  .col-head { position: sticky; top: 0; z-index: 5; }
+}
+
 /* COLUMNS */
 .col { display: flex; flex-direction: column; background: var(--surface); overflow: hidden; }
 .col-1 { border-right: 1px solid var(--border); }
@@ -3661,5 +3695,11 @@ renderCol1();updateRipBtn();applyLang();updateEmptyOverlays();applyDarkToggleIco
 setTimeout(setRipAnchor,150);
 })();
 </script>
-<div style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#bbb;font-family:'Roboto Mono',monospace;pointer-events:none;z-index:50;letter-spacing:.3px">v0.67</div>
+<div id="mobileConvertBar" style="display:none">
+  <button id="mobileConvertBtn" onclick="doConvert()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+    Convert
+  </button>
+</div>
+<div style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#bbb;font-family:'Roboto Mono',monospace;pointer-events:none;z-index:50;letter-spacing:.3px">v0.68</div>
 </html>
