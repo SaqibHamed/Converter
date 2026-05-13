@@ -108,37 +108,49 @@ html, body { height: 100%; font-family: 'Roboto', sans-serif; background: var(--
 .workspace { display: grid; grid-template-columns: 1fr 1fr 1fr; height: calc(100vh - 44px - 26px); }
 
 @media (max-width: 768px) {
+  html, body { height: auto; overflow-y: auto; }
   .workspace {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
     height: auto;
-    min-height: calc(100vh - 44px - 26px);
-    overflow-y: auto;
+    overflow: visible;
+    gap: 12px;
+    padding: 10px;
+    background: var(--bg);
   }
-  .col-1, .col-2 { border-right: none; border-bottom: 1px solid var(--border); }
-  .col { min-height: 280px; max-height: none; height: auto; }
-  .col-body { max-height: 50vh; }
-  .settings-body { max-height: none; }
+  .col-1, .col-2 { border-right: none; border-bottom: none; }
+  .col { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .col { height: auto; min-height: 0; max-height: none; overflow: visible; flex: none; }
+  .col-body { height: auto; max-height: none; overflow-y: visible; flex: none; }
+  .settings-body { max-height: none; overflow-y: visible; flex: none; }
+  .settings-empty { min-height: 60px; }
+  .col-2 { min-height: 200px; }
   #ripBtn { display: none !important; }
-  /* Mobile convert button — fixed bottom bar */
+  /* Mobile convert bar sits between col2 and col3 in the grid */
   #mobileConvertBar {
     display: flex !important;
-    position: fixed; bottom: 26px; left: 0; right: 0; z-index: 200;
-    padding: 8px 12px;
+    align-items: center; justify-content: center;
+    padding: 12px 16px;
     background: var(--surface);
-    border-top: 1px solid var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
   }
   #mobileConvertBtn {
-    flex: 1; height: 44px; background: var(--accent); color: #fff;
-    border: none; border-radius: 6px; font-size: 15px; font-weight: 500;
+    width: 100%; height: 52px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 8px;
+    font-size: 16px; font-weight: 500;
     font-family: 'Roboto', sans-serif; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: opacity .15s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    animation: mobileConvertPulse 2s ease-in-out infinite;
   }
-  #mobileConvertBtn:active { opacity: .8; }
-  body { padding-bottom: 80px; }
+  @keyframes mobileConvertPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(77,144,240,.5); }
+    50%       { box-shadow: 0 0 0 10px rgba(77,144,240,0); }
+  }
+  #mobileConvertBtn:active { opacity: .8; transform: scale(.97); }
   .topbar { flex-wrap: nowrap; overflow-x: auto; gap: 4px; }
-  .col-head { position: sticky; top: 0; z-index: 5; }
+  .col-head { position: sticky; top: 0; z-index: 5; background: var(--surface2); }
 }
 
 /* COLUMNS */
@@ -826,6 +838,14 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px;
       </div>
 
     </div>
+  </div>
+
+  <!-- MOBILE CONVERT ZONE — between settings and output -->
+  <div id="mobileConvertBar" style="display:none">
+    <button id="mobileConvertBtn" onclick="doConvert()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      Convert
+    </button>
   </div>
 
   <!-- COL 3: OUTPUT -->
@@ -3477,7 +3497,7 @@ async function extractChannel(file, channelIdx) {
   });
 }
 // MAIN CONVERT
-async function doConvert(){
+window.doConvert = async function doConvert(){
   const hasNodeSel = activeSelection?.type === 'node';
   const hasMergeNodes = mergeNodes.length > 0 && !hasNodeSel && sel.size === 0;
 
@@ -3695,11 +3715,5 @@ renderCol1();updateRipBtn();applyLang();updateEmptyOverlays();applyDarkToggleIco
 setTimeout(setRipAnchor,150);
 })();
 </script>
-<div id="mobileConvertBar" style="display:none">
-  <button id="mobileConvertBtn" onclick="doConvert()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
-    Convert
-  </button>
-</div>
-<div style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#bbb;font-family:'Roboto Mono',monospace;pointer-events:none;z-index:50;letter-spacing:.3px">v0.68</div>
+<div style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#bbb;font-family:'Roboto Mono',monospace;pointer-events:none;z-index:50;letter-spacing:.3px">v0.71</div>
 </html>
